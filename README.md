@@ -123,6 +123,28 @@ oc-dashboard/
 
 ## 配置
 
+复制并编辑配置文件：
+
+```bash
+cp config.json.example config.json
+```
+
+### 配置文件选项
+
+```json
+{
+  "sessionsRootDir": "~/.openclaw/agents",
+  "openclawConfigPath": "~/.openclaw/openclaw.json",
+  "serverPort": 3001
+}
+```
+
+| 选项 | 说明 | 默认值 |
+|------|------|--------|
+| `sessionsRootDir` | OpenClaw Agent 会话数据目录（JSONL 文件所在路径） | `~/.openclaw/agents` |
+| `openclawConfigPath` | `openclaw.json` 配置文件路径（用于读取 Agent 头像配置） | `~/.openclaw/openclaw.json` |
+| `serverPort` | 后端服务器端口 | `3001` |
+
 ### Agent 头像配置
 
 在 `openclaw.json` 中配置：

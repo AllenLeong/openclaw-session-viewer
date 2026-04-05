@@ -2,15 +2,32 @@ import express from 'express';
 import cors from 'cors';
 import { createServer } from 'http';
 import { WebSocketServer, WebSocket } from 'ws';
-import { join } from 'path';
+import { join, dirname } from 'path';
+import { fileURLToPath } from 'url';
 import { FileWatcher } from './fileWatcher.js';
 import { parseSessionFile, listSessionFiles, DisplayEvent, Session } from './parser.js';
 import { readdir, readFile } from 'fs/promises';
 import { existsSync } from 'fs';
 
-const SESSIONS_ROOT_DIR = '/Users/a/.openclaw/agents';
-const OPENCLAW_CONFIG_PATH = '/Users/a/.openclaw/openclaw.json';
-const PORT = 3001;
+const __dirname = dirname(fileURLToPath(import.meta.url));
+
+// Load config
+const configPath = join(__dirname, '..', 'config.json');
+const config = existsSync(configPath)
+  ? JSON.parse(await readFile(configPath, 'utf-8'))
+  : {
+      sessionsRootDir: '~/.openclaw/agents',
+      openclawConfigPath: '~/.openclaw/openclaw.json',
+      serverPort: 3001,
+    };
+
+// Expand ~ to home directory
+const homeDir = process.env.HOME || process.env.HOMEDIR || '/Users/a';
+const expandTilde = (path: string) => path.replace(/^~\//, `${homeDir}/`);
+
+const SESSIONS_ROOT_DIR = expandTilde(config.sessionsRootDir);
+const OPENCLAW_CONFIG_PATH = expandTilde(config.openclawConfigPath);
+const PORT = config.serverPort || 3001;
 
 const app = express();
 app.use(cors({

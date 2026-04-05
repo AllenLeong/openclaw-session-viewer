@@ -1,0 +1,5 @@
+{
+  "sessionsRootDir": "~/.openclaw/agents",
+  "openclawConfigPath": "~/.openclaw/openclaw.json",
+  "serverPort": 3001
+}
