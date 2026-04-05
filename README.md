@@ -21,10 +21,17 @@
 
 ## 快速开始
 
+### 0. 安装依赖
+
+```bash
+git clone https://github.com/AllenLeong/openclaw-session-viewer.git
+cd oc-dashboard
+npm install
+```
+
 ### 1. 启动后端服务器
 
 ```bash
-cd oc-dashboard
 npm run server
 ```
 
@@ -37,6 +44,12 @@ npm run dev
 ```
 
 前端将在 `http://localhost:5173` 启动
+
+### 或者一键启动
+
+```bash
+./start.sh
+```
 
 ## 技术栈
 
@@ -84,7 +97,9 @@ oc-dashboard/
 │   ├── server.ts               # Express + WebSocket 服务器
 │   ├── parser.ts               # JSONL 文件解析器
 │   └── fileWatcher.ts          # 文件监听器
+├── public/                     # 静态资源
 ├── package.json
+├── start.sh                    # 一键启动脚本
 └── README.md
 ```
 
@@ -108,17 +123,6 @@ oc-dashboard/
 
 ## 配置
 
-### 数据源配置
-
-默认会话数据目录：`/Users/a/.openclaw/agents/`
-
-如需修改，编辑 `server/server.ts`:
-
-```typescript
-const SESSIONS_ROOT_DIR = '/Users/a/.openclaw/agents';
-const OPENCLAW_CONFIG_PATH = '/Users/a/.openclaw/openclaw.json';
-```
-
 ### Agent 头像配置
 
 在 `openclaw.json` 中配置：
@@ -141,13 +145,18 @@ const OPENCLAW_CONFIG_PATH = '/Users/a/.openclaw/openclaw.json';
 
 头像文件路径：`{workspace}/{avatar}`
 
-## 开发
+### 会话数据目录
 
-### 安装依赖
+默认会话数据目录：`/Users/a/.openclaw/agents/`
 
-```bash
-npm install
+如需修改，编辑 `server/server.ts`:
+
+```typescript
+const SESSIONS_ROOT_DIR = '/Users/a/.openclaw/agents';
+const OPENCLAW_CONFIG_PATH = '/Users/a/.openclaw/openclaw.json';
 ```
+
+## 开发
 
 ### 生产构建
 
