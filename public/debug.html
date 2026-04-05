@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dashboard Debug</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; background: #1a1a1a; color: #fff; }
+        .container { max-width: 800px; margin: 0 auto; }
+        .status { padding: 10px; margin: 10px 0; border-radius: 4px; }
+        .success { background: #228B22; }
+        .error { background: #8B0000; }
+        .info { background: #4169E1; }
+        button { padding: 10px 15px; margin: 5px; background: #4CAF50; color: white; border: none; border-radius: 4px; cursor: pointer; }
+        button:hover { opacity: 0.8; }
+        pre { background: #333; padding: 10px; border-radius: 4px; overflow: auto; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>OpenClaw Dashboard Debug</h1>
+
+        <div id="status"></div>
+
+        <h2>Tests:</h2>
+        <button onclick="testHealth()">Test Backend Health</button>
+        <button onclick="testSessions()">Test Sessions API</button>
+        <button onclick="testWebSocket()">Test WebSocket Connection</button>
+        <button onclick="refreshPage()">Refresh Page</button>
+
+        <h3>Response:</h3>
+        <pre id="response"></pre>
+    </div>
+
+    <script>
+        const statusDiv = document.getElementById('status');
+        const responseDiv = document.getElementById('response');
+
+        function setStatus(text, type = 'info') {
+            statusDiv.innerHTML = `<div class="status ${type}">${text}</div>`;
+        }
+
+        async function testHealth() {
+            setStatus('Testing backend health...', 'info');
+            try {
+                const response = await fetch('http://localhost:3001/api/health');
+                const data = await response.json();
+                setStatus('Backend health: OK', 'success');
+                responseDiv.textContent = JSON.stringify(data, null, 2);
+            } catch (error) {
+                setStatus(`Backend health error: ${error.message}`, 'error');
+                responseDiv.textContent = error.message;
+            }
+        }
+
+        async function testSessions() {
+            setStatus('Testing sessions API...', 'info');
+            try {
+                const response = await fetch('http://localhost:3001/api/sessions');
+                const data = await response.json();
+                setStatus(`Sessions API: ${data.sessions.length} sessions found`, 'success');
+                responseDiv.textContent = JSON.stringify(data, null, 2);
+            } catch (error) {
+                setStatus(`Sessions API error: ${error.message}`, 'error');
+                responseDiv.textContent = error.message;
+            }
+        }
+
+        function testWebSocket() {
+            setStatus('Testing WebSocket connection...', 'info');
+            try {
+                const ws = new WebSocket('ws://localhost:3001/ws');
+
+                ws.onopen = function() {
+                    setStatus('WebSocket: Connected', 'success');
+                    responseDiv.textContent = 'WebSocket connected successfully';
+                    setTimeout(() => ws.close(), 1000); // Close after 1 second
+                };
+
+                ws.onerror = function(error) {
+                    setStatus('WebSocket: Connection error', 'error');
+                    responseDiv.textContent = 'WebSocket error: ' + error.message;
+                };
+
+                ws.onmessage = function(event) {
+                    console.log('Received:', event.data);
+                };
+            } catch (error) {
+                setStatus(`WebSocket error: ${error.message}`, 'error');
+                responseDiv.textContent = error.message;
+            }
+        }
+
+        function refreshPage() {
+            location.reload();
+        }
+
+        // Test on page load
+        window.onload = function() {
+            setStatus('Page loaded. Click buttons to test connections.', 'info');
+        };
+    </script>
+</body>
+</html>

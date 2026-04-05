@@ -1,0 +1,14 @@
+/* App-specific styles - most styling is done with Tailwind classes */
+
+/* Global animation for pulsing */
+@keyframes pulse {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 1;
+  }
+}
